@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CoalPlant : MonoBehaviour
+public class SolarPlant : MonoBehaviour
 {
-    //private int coalType = 1; //Number to check against placement tiles 
-    //public GameObject coalPlant;
+    //private int solarType = 2; //Number to check against placement tiles 
+    //public GameObject solarPlant;
 
     private float moneyTimer = 0.0f;
     private float powerTimer = 0.0f;
@@ -14,22 +14,24 @@ public class CoalPlant : MonoBehaviour
 
     private bool isBuilt = true; //needs to start as false
 
-    //private float moneyMade = 0;
+    private float moneyMade = 0;
     private float powerOutput = 0;
     private float pollutionGrowth = 0;
 
     //Values of growth for Revenue, Power and Pollution Bar
-    //private float moneyChange = 5.0f;
-    private float powerChange = 6.0f;
-    private float pollutionChange = 5.0f;
+    //private float moneyChange = 3.0f;
+    private float powerChange = 4.0f;
+    private float pollutionChange = 1.0f;
 
-    //$250k Value to increase revenue over time
-    private decimal revenueGrowth = 250000m;
-    public string revenueString = "250K";
 
-    //Cost $30m to build
-    public static decimal costToBuild = 30000000.00m;
-    public string costString = "30M";
+    //$100k Value to increase revenue over time
+    private decimal revenueGrowth = 100000m;
+    public string revenueString = "100K";
+
+
+    //Cost $10,000,000 to build
+    public static decimal costToBuild = 10000000.00m;
+    public string costString = "10M";
 
     //determines if player can build this plant
     public static bool canBuild = true;
@@ -51,6 +53,7 @@ public class CoalPlant : MonoBehaviour
         GenerateRevenue();
         GeneratePower();
         GeneratePollution();
+
     }
 
     //accumulates money if factory is placed down.
@@ -63,8 +66,8 @@ public class CoalPlant : MonoBehaviour
             if (moneyTimer >= 7.5f)
             {
                 //moneyMade += moneyChange;
-                /*RevenueBar.revenue = moneyMade; *///grows revenue bar
-
+                //RevenueBar.revenue = moneyMade; //grows revenue bar
+                
                 //Accrues revenue in the revenue bar
                 FindObjectOfType<RevenueBar>().revenueText.text = "$" + (RevenueBar.startingAmount += revenueGrowth);
 
@@ -73,6 +76,7 @@ public class CoalPlant : MonoBehaviour
                 //Debug.Log(moneyMade);
             }
         }
+
     }
 
     void GeneratePower()
@@ -86,7 +90,7 @@ public class CoalPlant : MonoBehaviour
                 powerOutput += powerChange;
                 PowerBar.power = powerOutput; //grows power bar
                 powerTimer = 0;
-                //Debug.Log(powerOutput);
+                Debug.Log(powerOutput);
             }
         }
     }
@@ -102,17 +106,16 @@ public class CoalPlant : MonoBehaviour
                 pollutionGrowth += pollutionChange;
                 PollutionBar.pollution = pollutionGrowth; //grows pollution bar
                 pollutionTimer = 0;
-                //Debug.Log("Coal generated " + pollutionGrowth + " amount of pollution!");
+                Debug.Log("Solar generated " + pollutionGrowth + " amount of pollution!");
             }
         }
     }
-
 
     void BuildingCost()
     {
         if (isBuilt)
         {
-            if (RevenueBar.startingAmount < costToBuild || RevenueBar.startingAmount <= 0)
+            if (RevenueBar.startingAmount <= 0)
             {
                 canBuild = false;
             }
@@ -122,27 +125,14 @@ public class CoalPlant : MonoBehaviour
                 FindObjectOfType<RevenueBar>().revenueText.text = "$" + (RevenueBar.startingAmount -= costToBuild);
 
                 FindObjectOfType<RevenueBar>().subtractionText.text = "-$" + costString;
+
                 if (RevenueBar.startingAmount <= 0.0m)
                 {
                     RevenueBar.startingAmount = 0.0m;
                     canBuild = false;
                 }
+
             }
         }
     }
-
-    //private void DestroyPlant()
-    //{
-    //    Destroy(this.gameObject, 1);
-    //}
-
-
-    ////method to break/pause the plant output of money and power untill there is a repair
-    //void MalfunctionEvent()
-    //{
-    //    if (isBuilt)
-    //    {
-
-    //    }
-    //}
 }
